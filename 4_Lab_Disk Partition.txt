@@ -1,0 +1,72 @@
+Lab:
+===
+Section 1 :: Create a partition of 100 MB. Create an extended partition and assign rest of the disk space to it.
+             Create a logical partition of 1 GB
+
+Section 2 :: Format the primary partition using xfs filesystem and mount it under /mnt/primary
+             Format the logical partition using ex4 filesystem and mount it under /mnt/logical
+
+Linux native filesystems ==> ext2 / ext3 / ext4 / xfs [ default filesystem in RHEL7/RHEL8 ] 
+
+
+Command (m for help): p [ to list the partitions available in the partition table ]
+ Command (m for help): n [ create a new partition ]
+  First Sector : <Press Enter>
+  Last Sector : +100M
+ Command (m for help): q [ to quit from fdisk ]
+ Command (m for help): w [ to save ]
+ Command (m for help): d [ to delete a partition ]
+ Exit from fdisk utility.
+ 
+ Run the udevadm settle command to register the changes means mkaing the system wait to detect the new partition
+ and to create the associated device file under /dev/directory.
+
+  For RHEL6/RHEL7 ==> partprobe /dev/sdb
+
+Create Filesystem on the partition
+  mkfs.xfs /dev/sdb1
+  mkfs.ext4 /dev/sdb5
+
+Create mount point directories
+  mkdir /mnt/{primary,logical}
+
+Mount the partitions
+  mount /dev/sdb1 /mnt/primary
+  mount /dev/sdb5 /mnt/logical
+
+Mount partitions persistently so that it remains mounted across reboot
+	vim /etc/fstab
+ Device/Partition   Mount_Point     Filesystem     Mount_Options     Dump_Level      FSCK_Order
+  /dev/sdb1	    /mnt/primary     xfs            defaults            0                0
+Save and Quit
+mount -a
+
+ Note: It is recommended that we use the UUID value for the partition instead of using the device name
+UUID="4ebd0de5-fe18-4d3f-b109-6ef1a3af19c9"		/mnt/primary		xfs	defaults	0 0
+To get the UUID value, run the blkid command ==> blkid /dev/sdb1
+
+-----------------------------------------------------------------------
+A swap space is an area os a disk under the control of the Linux kernel memory management subsystem.
+The combined system RAM plus swap space is called Virtual Memory.
+
+Steps to create Swap Partition
+1. Create a partition of 1 GB and change the partition ID from 83 to 82 to make it a Linux Swap Partition
+    Linux Native Filesystem(ext2/ext3/ext4/xfs) ==> 83
+    Linux Swap ==> 82
+    Linux LVM  ==> 8e
+    Linux RAID ==> fd
+2. Format the SWAP partition
+    mkswap /dev/sdb6   ==> The mkswap command applies a swap signature to the device. It writes a single block of
+    data at the beginning of the device, leaving the rest of the device unformatted so that kernel can use it to store    memory pages.
+	mkswap /dev/sdb6
+3. Activate the SWAP partition
+	swapon /dev/sdb6
+        swapoff /dev/sdb6 [ to deactivate swap partition ]
+4. Make the SWAP partition persistent across reboot
+
+ Device/Partition   Mount_Point     Filesystem     Mount_Options     Dump_Level      FSCK_Order
+   /dev/sdb6	      swap            swap            defaults          0               0
+
+5. To check the status swap partition - 
+	swapon -s
+	swapon -v

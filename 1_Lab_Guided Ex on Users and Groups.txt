@@ -1,0 +1,29 @@
+Guided Exercise :
+   -----------------
+   	1. Create a group called sysadmin
+		groupadd sysadmin
+	2. Create 2 users called john and jane. Set the password to redhat for both users.
+		useradd john
+		useradd jane
+		passwd john
+		passwd jane
+	3. john user should have real name as "Cloud Architect" and a default shell as /bin/bash   
+		usermod -c "Cloud Architect" john 
+	4. jane user should have real name as "Automation Engineer" and a default shell as /bin/sh
+		usermod -c "Automation Engineer" jane 
+   	5. sysadmin should be the secondary group for john and jane
+		usermod -G sysadmin john
+		usermod -G sysadmin jane
+	6. Create a user called cloud-user with a UID 5001. This user should have no interactive shell access
+	   in the system.
+		useradd -u 5001 cloud-user
+		usermod -s /sbin/nologin cloud-user
+	7. Create a group called cloudadmins with a GID 10001
+		groupadd -g 10001 cloudadmins
+	8. Store the first 5 lines from the file /etc/passwd into a file called /root/mypass.
+		head -n 5 /etc/passwd > /root/mypass
+	9. Lock and unlock the useraccount cloud-user and notice the changes in /etc/shadow file.
+		usermod -L cloud-user
+		usermod -U cloud-user
+       10. Remove the jane user along with his home directory. 
+		userdel -r jane

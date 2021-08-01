@@ -1,0 +1,42 @@
+Lab:
+---
+a. Install vdo and kmod-kvdo packages to enable VDO in the system
+	yum install vdo kmod-kvdo
+b. Create a VDO volume called vdo1 using a block device
+	vdo create --name=vdo1 --device=/dev/nvme1n1 --vdoLogicalSize=50G
+c. List and Analyze VDO volume
+	vdo list
+	vdo status --name=vdo1
+        vdo status --name=vdo1 | grep -i deduplication
+        vdo status --name=vdo1 | grep -i compression
+d. Format the VDO volume using XFS filesystem
+	mkfs.xfs -K /dev/mapper/vdo1 [ The -K option  prevents the unused blocks in the filesystem 
+	from being discarded immediately which lets the command return faster ]
+e. Register the new device node
+	udevadm settle
+f. Mount the VDO volume on /mnt/vdo1
+	mkdir /mnt/vdo1
+	mount /dev/mapper/vdo1 /mnt/vdo1
+ UUID=-------   /mnt/vdo1	xfs        defaults,x-systemd.requires=vdo.service 0	0
+Testing :
+-------
+i. View the initial statistics and status of the volume using the vdostats command
+	vdostats --human-readable
+In the output, we will see that 3 GB of the volume is already used because when created, the VDO
+volume reserves 3-4 GB for itself. Also we will see the value 99% in Space Saving% field which
+indicates that we have NOT created any content so far in the volume contributing to all of the
+saved volume space.
+
+ii. Lets create a 1 GB file in the volume -
+	dd if=/dev/urandom of=/mnt/vdo1/bigfile1 bs=1M count=1024
+  Observation : After creation of this 1GB file, the USED filed should be increased from 3.0G to 4.0G
+  and the space saving% field should get decreased from 99% to 5%
+  Now if we copy bigfile1 file multiple times using different names within the same volume, we will
+  not see any increase in the Size field as the content of all the files are exactly same.
+
+Cleanup
+------
+1. Unmount the volume and remove any entry from /etc/fstab for VDO volume
+2. Stop and remove the VDO volume
+	vdo stop --name=vdo1
+	vdo remove --name=vdo1

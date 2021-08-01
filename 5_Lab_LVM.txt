@@ -1,0 +1,44 @@
+Lab:
+---- 
+1. Create a partition of 2 GB. Convert it to Linux LVM partition.
+2. Create a PV using that partition.
+3. Create a VG called vg1 using the PV
+4. Create an LV called lv1 having 50 extents. Assign this LV to the VG called vg1
+5. Create ext4 filesystem on the lv1 LV
+6. Mount the LV into /mnt/lv1
+7. Create another LV called lv2 having 60 extents. Assign this LV to the same VG called vg1
+8. Create xfs filesystem on lv2 LV.
+9. Mount the LV called lv1 into /mnt/lv2
+===================================================================================
+
+1. Extend the logical volume called lv1 by 200 MB keeping the existing data intact
+   	lvextend -L +200M /dev/vg1/lv1
+	resize2fs /dev/vg1/lv1 [ this command will actually resize the LV online ]
+
+2. Extend the logical volume called lv2 so that it consumes the remaining space of the VG keeping the existing data intact
+   	lvextend -L +200M /dev/vg1/lv1
+	xfs_growfs /dev/vg1/lv1 [ this command will actually resize the LV online ]
+
+Extend the VG
+----------------
+1. Create PV
+2. Extend the VG by using the newly created PV
+	vgextend vg1 <new_pv_name>
+
+--------------------------------------------------------------------------------------
+Remove LV
+--------
+1. Unmount the volume
+	umount /mnt/lv1
+	umount /mnt/lv2
+2. Remove the entries from /etc/fstab
+3. Remove LV
+	lvremove /dev/vg1/lv1
+	lvremove /dev/vg1/lv2
+4. Remove VG
+	vgremove vg1
+5. Remove PV
+	pvremove /dev/sdb1 /dev/sdb2
+
+6. Delete the partitions using fdisk
+

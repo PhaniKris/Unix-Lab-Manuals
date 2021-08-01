@@ -1,0 +1,43 @@
+Lab : Managing Thin-Provisioned File Systems
+--------------------------------------------
+ a. yum install stratis-cli stratisd
+ b. systemctl enable --now stratisd
+ c. Create a Pool called pool1 using 1 block device
+	stratis pool create pool1 /dev/nvme1n1
+ d. List the Pools available
+	stratis pool list
+ e. Add additional block device to an existing Pool
+	stratis pool add pool1 /dev/nvme2n1
+ f. List the Block Devices of a Pool
+	stratis blockdev list pool1
+ g. Create a Dynamic and flexible filesystem from the Pool
+	stratis filesystem create pool1 filesystem1
+ h. List the available filesystems
+	stratis filesystem list
+ i. Create a snapshot called filesystem1-snap1
+	stratis filesystem snapshot pool1 filesystem1 filesystem1-snap1
+	stratis filesystem list
+ j. To recover data/files from snapshot filesystem
+	mkdir /stratisvol-snap1
+	mount /stratis/pool1/filesystem1-snap1 /stratisvol-snap1
+	ls -l /stratisvol-snap1
+
+ i. Mount the filesysem
+	 mkdir /stratisvol
+	 mount /stratis/pool1/filesystem1 /stratisvol
+         vim /etc/fstab
+ UUID=-------   /stratisvol	xfs        defaults,x-systemd.requires=stratisd.service 0	0
+
+Note : The x-systemd.requires=stratisd.service mount option delays mounting the filesystem until after systemd
+       starts the stratisd.service during the boot process.
+
+    dd if=/dev/urandom of=/stratisvol/bigfile1 bs=1M count=2048
+
+Cleanup :
+--------
+1. Unmount the stratis filesystem and delete the entry from /etc/fstab
+2. Delete the filesystem
+	stratis filesystem destroy pool1 filesystem1
+3. Delete the stratis pool
+	stratis pool destroy pool1
+4. Ensure that there is nol pool/filesystem listed within /stratis directory

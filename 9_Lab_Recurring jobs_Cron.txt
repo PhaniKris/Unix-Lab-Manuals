@@ -1,0 +1,10 @@
+Lab:
+---
+1. Schedule a recurring system job that generates a log message indicating the number of currently active users in the system
+   The job must run daily. Use the logger command to generate the log message
+     Create a script called /etc/cron.daily/usercount
+
+   #!/bin/bash
+   USERCOUNT=$(w -h | wc -l)
+   logger "There are currently $USERCOUNT active users"
+2. Verify the log file for the message

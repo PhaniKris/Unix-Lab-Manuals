@@ -1,0 +1,53 @@
+Lab :
+1. Create a Physical volume of 1 GB.
+	pvcreate /dev/nvme1n1p1
+	pvdisplay
+2. Create a Volume Group called vg1 using this PV. Check the default extent size.
+   Now delete the volume group vg1 and recreate it and set the extent size to 16 MB.
+	vgcreate vg1 /dev/nvme1n1p1
+	vgdisplay
+	vgremove vg1
+	vgcreate vg1 -s 16M /dev/nvme1n1p1
+	vgdisplay
+3. Create a Logical volume called lv1 of size 700 MB within vg1
+	lvcreate -n lv1 -L 700M vg1  [ -L is for size ]
+	lvdisplay
+4. Format the logical volume using ext4 filesystem
+	mkfs.ext4 /dev/vg1/lv1
+5. Mount the logical volume under /mnt/lv1
+	mkdir /mnt/lv1
+	mount /dev/vg1/lv1 /mnt/lv1
+	df -Th
+6. Extend the logical volume so that it occupies the remaining space from vg1.
+	lvextend -L +304M /dev/vg1/lv1
+	resize2fs /dev/vg1/lv1
+ 
+7. Extend the volume group vg1 by 2 GB
+	Create another physical volume of 2 GB
+	vgextend vg1 /dev/nvme1n1p2
+	vgdisplay
+8. Create another logical volume called lv2 by using 30 extents.
+	lvcreate -n lv2 -l 30 vg1 [ -l is for no. of extents ]
+	lvdisplay
+        mkfs.xfs /dev/vg1/lv2
+	mkdir /mnt/lv2
+	mount /dev/vg1/lv2 /mnt/lv2
+  Extend the lv2 volume by 30 extents ==> 
+	lvextend -l +30 /dev/vg1/lv2
+	xfs_growfs /mnt/lv2
+
+9. Ensure that the logical volumes are mounted persistently.
+    vim /etc/fstab
+	/dev/vg1/lv1	/mnt/lv1	ext4	defaults	0	0
+         
+10. Remove PV/VG/LV
+	Unmount the volume
+	lvremove /dev/vg1/lv1
+	vgremove vg1
+	pvremove <physical_volume>
+	Delete the entry from /etc/fstab
+	Delete the partition using fdisk
+
+11. Reducing a Volume Group
+	pvmove /dev/nvme1n1p2
+        vgreduce vg1 /dev/nvme1n1p2

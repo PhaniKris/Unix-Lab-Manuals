@@ -1,0 +1,45 @@
+Lab :
+---
+1. Install vsftpd package. Start and Enable the service
+2. Install the ftp client
+3. Try to login to FTP srever as anonymous/ftp user and it should be denied. Make necessary changes in
+   vsftpd.conf to allow anonumous user login.
+4. Create 2 users called ftpuser1 and ftpuser2
+5. Run the FTP command from root and then login to FTP server as ftpuser1 and ftpuser2 respectively and
+   upload some files. It should work.
+6. By default root login is disabled in FTP server. Consult necessary files to enable root login for
+   testing purpose.
+7. Allow only ftpuser, root and anonymous user for FTP access.
+
+8. Create a directory called anon-upload in /var/ftp. Setup required permission and configuration changes
+   so that anonymous can upload files in /var/ftp/anon-upload
+
+    vim /etc/vsftpd/vsftpd.conf
+    anon_upload_enable=YES
+    Save and Quit
+    systemctl restart vsftpd
+
+    mkdir /var/ftp/anon-upload
+    chmod 730 /var/ftp/anon-upload
+    chgrp ftp /var/ftp/anon-upload
+
+9. Allow FTP ports through Firewall -
+    firewall-cmd --permanent --add-port=20/tcp
+    firewall-cmd --permanent --add-port=21/tcp
+    firewall-cmd --reload
+
+10. Enable and Monitor FTP logs
+        vim /etc/vsftpd/vsftpd.conf
+         xferlog_enable=YES  ==> This will enable FTP server logging
+
+    tail /var/log/xferlog
+
+13. Enable Selinux and ensure that anonymous upload us still working.
+    setenforce 1
+    getenforce
+    getsebool -a | grep ftp
+    Enable booleans
+    setsebool -P ftpd_anon_write on
+    setsebool -P ftpd_full_access on
+
+14. Test FTP server access using ftp client.

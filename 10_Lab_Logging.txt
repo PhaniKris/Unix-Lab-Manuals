@@ -1,0 +1,12 @@
+Lab :
+---
+Configure the rsyslog service to write all log messages with the debug priority to the /var/log/custom-debug
+log file.
+
+Steps:
+  a. vim /etc/rsyslog.d/debug.conf
+        *.debug         /var/log/custom-debug
+  b. systemctl restart rsyslog ==> This command will create the custom-debug file if it does not exist
+  c. Send a message with debug priority manually using logger command
+        logger -p user.debug "Test Debug Log Message"
+  d. tail /var/log/custom-debug ==> The log message should be visible here

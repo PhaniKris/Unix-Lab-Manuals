@@ -1,0 +1,15 @@
+Lab: 
+---
+1. List all the installed modules
+2. List all available versions for python and postgresql
+3. View the information for python36 module
+4. Install the module python36
+5. After installation, give the command python --version to see the currently installed python version
+6. Remove the python36 module and also disable it
+7. Now, install a newer version of python module i.e. python38
+8. Check the python version now
+
+9. To support web application deployed on this system, install postgresql version 9.6
+10. Check the version of postgresql by the command ==> postgres --version
+11. Now remove postgresql 9.6 version from the system.
+12. Now, install an upgraded version of postgresql with version 10 and check the version after installation

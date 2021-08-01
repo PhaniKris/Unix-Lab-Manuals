@@ -1,0 +1,28 @@
+Lab : Configure permissions and ACL 
+----------------------------------
+1. Create a group called cloudadmins with GID 10001
+2. Create a user called cloud-user1 using the following specifications - 
+	UID = 10001
+	GECOS Field = Cloud Operator
+	Secondary Group = cloudadmins
+	Default Shell = /bin/sh
+3. cloud-user1 should be configured as to run any command within the system. After this configuration is done the following
+   commmand should run successfully - 
+	su - cloud-user1
+	tail -n 5 /var/log/messages
+4. As cloud-user1, attempt to make a copy of /etc/fstab as /etc/fstab without using sudo. This should fail.
+5. Setup a message of the day(motd) as "Today we have meeting with V.P @5 PM". This message should be displayed before
+   the actual login happens.
+6. If the /etc/passwd file is deleted accidentally, how do you restore that?
+7. Create a directory called /shares/content.
+8. cloudadmins should be the group owner for /shares/content directory.
+9. cloudadmins group members should have full access and others should have read and execute permission on /shares/content directory. Any files/directories created withn this directory should have the group owner set as cloudadmin automaically. Ensure that only owners can delete his/her file(s) within /shares/content directory.
+10. Create a user called architect1 who should have read and write access on /shares/content directory.
+11. Copy the file /etc/inittab within /var/tmp directory.
+12. /var/tmp/inittab file should have the owner as root 
+13. /var/tmp/inittab file should have the group owner as root
+14. cloud-user1 should have read and write access on /var/tmp/inittab
+15. architect1 user should have no access on /var/tmp/inittab
+16. Any other user should have read access for the /var/tmp/inittab file.
+17. Setup a default ACL on /shares/content directory so that any new files/directories created within that get     the same ACL as that of the directory.
+18. Filter the lines from /etc/passwd file which have the word called "root" and store the filtered output in a    file called /root/filter.txt

@@ -1,0 +1,18 @@
+Lab on Permission and Ownerships
+-------------------------------
+1. Create a group called consultants
+2. Create 2 users called consultant1 and consultant2 
+3. consultants should be the secondary group for consultant1 and consultant2 users.
+4. Create a directory called /home/consultants
+5. Change the group owner to consultants for the /home/consultants directory
+6. Give write permission to the consultants group
+7. Use the chmod command to forbid others from accessing files in /home/consultants directory.
+8. Exit the root shell and switch to consultant1 user.
+9. Navigate to /home/consultants directory and create a file called consultant1.txt
+10. Ensure all members of the consultants group can edit the consultant1.txt file.
+11. Exit the shell and switch to consultant2 user.
+12. Navigate to the /home/consultants directory. Ensure that consultat2 user can add content "Hello 
+    World" to the consultant1.txt file
+14. Ensure that all files created within /home/sonsultants directory have the group owner set to 
+    consultants automatically.
+15. Also make sure that only owner can delete his/her file(s) within /home/consultants.

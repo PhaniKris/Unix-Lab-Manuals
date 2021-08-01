@@ -1,0 +1,5 @@
+Lab:
+---
+Configure the system journal to preserve its data after a reboot.
+
+5. dmesg ==> to display the startup log messages

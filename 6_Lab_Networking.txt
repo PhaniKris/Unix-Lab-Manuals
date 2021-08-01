@@ -1,0 +1,15 @@
+Lab
+---
+1. Note down the IP configuration of your system by using ifconfig and ip command.
+2. How to display the MAC address of the NIC?
+3. Display the default gateway. ==> route -n    ///   netstat -r
+4. Note the DNS server IP from /etc/resolv.conf file
+5. What is location of the Interface Configuration files?
+6. Configure network for your linux server - 
+	IP Address : 172.31.4.112
+	Subnet Mask : 255.255.240.0
+	Default Gateway : 172.31.0.1
+	DNS Server IP : 172.31.0.2
+  The interface should be configured to be activated onboot.
+7. What is the command to change the system name temporarily?
+8. What is the command to change the system name permanently? What is the name of the file that stores the hostname?

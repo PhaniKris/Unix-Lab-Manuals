@@ -1,0 +1,20 @@
+Lab:
+---
+1. Login as a non-privileged user
+2. Schedule a to ru in 3 minutes from now using at command. The job must save the output of the date command to 
+   /home/<user_name>/myjob.txt
+     at now + 3min
+     at> date>/home/<user_name>/myjob.txt
+	OR
+     echo "date >> /home/<user_name>/myjob.txt" | at now + 3min
+
+3. List the scheduled jobs using atq command
+	atq
+4. Use the cat command to verify the contants of /home/<user_name>/myjob.txt
+5. Use the at command to interactively schedule a job with the queue g that runs at teatime(16:00). The job should execute
+      at -q g teatime
+6. Use the at command to interactively schedule another job with the queue b that runs at 16:05. The job should execute
+   a command that prints a message "Job scheduling using at" to /home/<user_name>/atjob.txt
+7. Use atq command to view the job numbers of the pending jobs. Now use the at command to view the commands in the pending
+   job number 2
+	at -c <job_id>
